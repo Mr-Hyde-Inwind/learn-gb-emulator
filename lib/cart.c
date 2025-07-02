@@ -66,3 +66,11 @@ bool cart_load(char* cart) {
 
     return true;
 }
+
+uint8_t cart_read(uint16_t address) {
+    return ctx.rom_data[address];
+}
+
+uint8_t cart_write(uint16_t address, uint8_t value) {
+    NO_IMPL
+}
