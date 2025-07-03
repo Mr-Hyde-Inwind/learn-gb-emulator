@@ -1,3 +1,4 @@
+#pragma once
 #include <common.h>
 
 static const char* CART_TYPE[0x100] = {
