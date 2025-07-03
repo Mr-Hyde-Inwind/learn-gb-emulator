@@ -20,7 +20,9 @@ uint8_t bus_read(uint16_t address) {
         return cart_read(address);
     }
 
-    NO_IMPL
+    printf("UNSUPPORTED bus_read(%04X)\n", address);
+
+    // NO_IMPL
 }
 
 void bus_write(uint16_t address, uint8_t value) {
@@ -28,6 +30,20 @@ void bus_write(uint16_t address, uint8_t value) {
         cart_write(address, value);
         return;
     }
+
+    printf("UNSUPPORTED bus_write(%04X, %02X)\n", address, value);
     
-    NO_IMPL
+    // NO_IMPL
+}
+
+uint16_t bus_read16(uint16_t address) {
+    uint16_t lo = bus_read(address);
+    uint16_t hi = bus_read(address + 1);
+
+    return lo | (hi << 8);
+}
+
+void bus_write16(uint16_t address, uint16_t value) {
+    bus_write(address + 1, (value >> 8) & 0xFF);
+    bus_write(address, value & 0xFF);
 }

@@ -9,7 +9,7 @@ typedef struct {
 
 static cart_ctx ctx;
 
-char* cart_type_name() {
+const char* cart_type_name() {
     if (ctx.header->cart_type <= 0x22) {
         return CART_TYPE[ctx.header->cart_type];
     } else {
@@ -17,7 +17,7 @@ char* cart_type_name() {
     }
 }
 
-char* lic_code_name() {
+const char* lic_code_name() {
     if (ctx.header->old_lic_code <= 0xFF) {
         return OLD_LIC_CODE[ctx.header->old_lic_code];
     } else {
@@ -72,5 +72,6 @@ uint8_t cart_read(uint16_t address) {
 }
 
 uint8_t cart_write(uint16_t address, uint8_t value) {
+    printf("cart_write\n");
     NO_IMPL
 }
