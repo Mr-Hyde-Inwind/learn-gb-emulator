@@ -46,7 +46,8 @@ typedef enum {
   IN_EI,
   IN_HALT,
   IN_DAA,
-  IN_STOP
+  IN_STOP,
+  IN_CB
 } in_type;
 
 typedef enum {
