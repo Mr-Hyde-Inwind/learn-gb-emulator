@@ -35,6 +35,8 @@ typedef struct {
 
   bool halted;
   bool stepping;
+
+  uint8_t ie_register;
 } cpu_context;
 
 void cpu_init();
@@ -50,6 +52,11 @@ typedef void (*IN_PROC)(cpu_context* );
 uint16_t cpu_read_reg(reg_type rt);
 
 void cpu_set_reg(reg_type rt, uint16_t value);
+
+uint8_t cpu_get_ie_register();
+void cpu_set_ie_register(uint8_t n);
+
+cpu_registers* cpu_get_regs();
 
 
 IN_PROC inst_get_processor(in_type);
