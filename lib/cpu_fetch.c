@@ -1,3 +1,4 @@
+#include <emu.h>
 #include <cpu.h>
 
 extern cpu_context ctx;
@@ -97,7 +98,6 @@ void fetch_data() {
     
     case AM_A8_R:
       ctx.mem_dest = bus_read(ctx.regs.pc) | 0xFF00;
-      ctx.fetched_data = cpu_read_reg(ctx.cur_inst->reg_2);
       ctx.dest_is_mem = true;
       emu_cycles(1);
       ctx.regs.pc++;

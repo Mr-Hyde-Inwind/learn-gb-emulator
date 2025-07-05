@@ -23,8 +23,8 @@ uint16_t cpu_read_reg(reg_type rt) {
     case RT_DE: return reverse(*((uint16_t*)&ctx.regs.d));
     case RT_HL: return reverse(*((uint16_t*)&ctx.regs.h));
 
-    case RT_PC: return ctx.regs.l;
-    case RT_SP: return ctx.regs.l;
+    case RT_PC: return ctx.regs.pc;
+    case RT_SP: return ctx.regs.sp;
   
     default: return 0;
   }
@@ -96,4 +96,12 @@ void cpu_set_reg8(reg_type rt, uint8_t val) {
       NO_IMPL
     }
   }
+}
+
+uint8_t cpu_get_int_flags() {
+    return ctx.int_flags;
+}
+
+void cpu_set_int_flags(uint8_t value) {
+    ctx.int_flags = value;
 }
