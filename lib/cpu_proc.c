@@ -1,4 +1,5 @@
 #include <cpu.h>
+#include <emu.h>
 #include <stack.h>
 
 reg_type rt_lookup[] = {
@@ -66,21 +67,22 @@ static void proc_ld(cpu_context* ctx) {
       emu_cycles(1);
       bus_write16(ctx->mem_dest, ctx->fetched_data);
     } else {
-      emu_cycles(1);
       bus_write(ctx->mem_dest, ctx->fetched_data);
     }
+    emu_cycles(1);
     return ;
   }
 
   if (ctx->cur_inst->mode == AM_HL_SPR) {
     uint8_t hflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0xF) + (ctx->fetched_data & 0xF) >= 0x10;
 
-    uint8_t cflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0xFF) + (ctx->fetched_data & 0xFF) >= 0x10;
+    uint8_t cflag = (cpu_read_reg(ctx->cur_inst->reg_2) & 0xFF) + (ctx->fetched_data & 0xFF) >= 0x100;
 
     cpu_set_flags(ctx, 0, 0, hflag, cflag);
     cpu_set_reg(ctx->cur_inst->reg_1,
       cpu_read_reg(ctx->cur_inst->reg_2) + (char)ctx->fetched_data);
 
+    return ;
   }
 
   cpu_set_reg(ctx->cur_inst->reg_1, ctx->fetched_data);
@@ -155,10 +157,10 @@ static void proc_xor(cpu_context* ctx) {
 }
 
 static void proc_ldh(cpu_context* ctx) {
-  if (ctx->dest_is_mem) {
-    bus_write(ctx->mem_dest, ctx->fetched_data);
-  } else {
+  if (ctx->cur_inst->reg_1 == RT_A) {
     cpu_set_reg(ctx->cur_inst->reg_1, bus_read(0xFF00 | ctx->fetched_data));
+  } else {
+    bus_write(ctx->mem_dest, ctx->regs.a);
   }
   emu_cycles(1);
 }
@@ -182,7 +184,7 @@ static void proc_push(cpu_context* ctx) {
   emu_cycles(1);
   stack_push(hi);
 
-  uint16_t lo = cpu_read_reg(ctx->cur_inst->reg_2) &0xFF;
+  uint16_t lo = cpu_read_reg(ctx->cur_inst->reg_1) &0xFF;
   emu_cycles(1);
   stack_push(lo);
 
@@ -205,7 +207,7 @@ static void proc_dec(cpu_context* ctx) {
     val = cpu_read_reg(ctx->cur_inst->reg_1);
   }
   
-  if (ctx->cur_opcode & 0x0B == 0x0B) {
+  if ((ctx->cur_opcode & 0x0B) == 0x0B) {
     return ;
   }
 
@@ -256,7 +258,7 @@ static void proc_add(cpu_context* ctx) {
   if (is_16bit) {
     z = -1;
     h = (cpu_read_reg(ctx->cur_inst->reg_1) & 0xFFF) + (ctx->fetched_data & 0xFFF) >= 0x1000;
-    uint32_t n = (uint32_t)cpu_read_reg(ctx->cur_inst->reg_1) + (uint32_t)cpu_read_reg(ctx->fetched_data);
+    uint32_t n = ((uint32_t)cpu_read_reg(ctx->cur_inst->reg_1)) + ((uint32_t)ctx->fetched_data);
     c = n >= 0x10000;
   }
 
@@ -369,7 +371,7 @@ static void proc_cb(cpu_context* ctx) {
       // RLC
       bool setC = false;
       uint8_t result = (reg_val << 1) & 0xFF;
-      if (reg_val & (1 << 7) != 0) {
+      if ((reg_val & (1 << 7)) != 0) {
         result |= 1;
         setC = true;
       }
@@ -381,15 +383,12 @@ static void proc_cb(cpu_context* ctx) {
     }
     case 1: {
       // RRC
-      bool setC = false;
-      uint8_t result = (reg_val >> 1) & 0xFF;
-      if (reg_val & 1 != 0) {
-        result |= (1 << 7);
-        setC = true;
-      }
+      uint8_t old = reg_val;
+      reg_val >>= 1;
+      reg_val |= (old << 7);
 
-      cpu_set_reg8(reg, result);
-      cpu_set_flags(ctx, result == 0, 0, 0, setC);
+      cpu_set_reg8(reg, reg_val);
+      cpu_set_flags(ctx, reg_val == 0, 0, 0, old & 1);
 
       return;
     }
@@ -424,11 +423,10 @@ static void proc_cb(cpu_context* ctx) {
     }
     case 5: {
       // SRA
-      uint8_t old = reg_val;
-      reg_val >>= 1;
+      uint8_t u = (int8_t)reg_val >> 1;
 
-      cpu_set_reg8(reg, reg_val);
-      cpu_set_flags(ctx, reg_val == 0, 0, 0, !!(old & 1));
+      cpu_set_reg8(reg, u);
+      cpu_set_flags(ctx, u == 0, 0, 0, !!(reg_val & 1));
       return;
     }
     case 6: {
@@ -502,7 +500,7 @@ static void proc_daa(cpu_context* ctx) {
       u += 6;
     }
     if (CPU_FLAG_C) {
-      u += 60;
+     u |= 0x60;
       fc = 1;
     }
     ctx->regs.a -= u;
@@ -511,7 +509,7 @@ static void proc_daa(cpu_context* ctx) {
       u += 6;
     }
     if (CPU_FLAG_C || ctx->regs.a > 0x99) {
-      u += 60;
+      u |= 0x60;
       fc = 1;
     }
     ctx->regs.a += u;

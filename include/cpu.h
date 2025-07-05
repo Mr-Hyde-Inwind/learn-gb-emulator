@@ -45,8 +45,6 @@ void cpu_init();
 
 bool cpu_step();
 
-void emu_cycles(int cpu_cycles);
-
 void fetch_data();
 
 typedef void (*IN_PROC)(cpu_context* );
@@ -65,3 +63,8 @@ cpu_registers* cpu_get_regs();
 
 
 IN_PROC inst_get_processor(in_type);
+
+void inst_to_str(cpu_context *ctx, char *str);
+
+uint8_t cpu_get_int_flags();
+void cpu_set_int_flags(uint8_t value);

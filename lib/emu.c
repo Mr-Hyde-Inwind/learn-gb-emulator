@@ -4,6 +4,7 @@
 #include <emu.h>
 #include <cart.h>
 #include <cpu.h>
+#include <timer.h>
 #include <ui.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -22,11 +23,20 @@ emu_context* emu_get_context() {
   return &ctx;
 }
 
+void emu_cycles(int cpu_cycles) {
+  int real_cycles = cpu_cycles * 4;
+  for (int i = 0; i < real_cycles; i++) {
+    ctx.ticks++;
+    timer_tick();
+  }
+}
+
 void delay(uint32_t ms) {
   SDL_Delay(ms);
 }
 
 void* cpu_run(void *p) {
+  timer_init();
   cpu_init();
 
   ctx.running = true;
@@ -43,8 +53,6 @@ void* cpu_run(void *p) {
       printf("CPU Stopped\n");
       return 0;
     }
-
-    ctx.ticks++;
   }
 }
 

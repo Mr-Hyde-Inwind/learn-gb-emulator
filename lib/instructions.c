@@ -76,7 +76,7 @@ instruction instructions[0x100] = {
   [0x43] = {IN_LD, AM_R_R, RT_B, RT_E},
   [0x44] = {IN_LD, AM_R_R, RT_B, RT_H},
   [0x45] = {IN_LD, AM_R_R, RT_B, RT_L},
-  [0x46] = {IN_LD, AM_R_R, RT_B, RT_HL},
+  [0x46] = {IN_LD, AM_R_MR, RT_B, RT_HL},
   [0x47] = {IN_LD, AM_R_R, RT_B, RT_A},
   [0x48] = {IN_LD, AM_R_R, RT_C, RT_B},
   [0x49] = {IN_LD, AM_R_R, RT_C, RT_C},
@@ -84,7 +84,7 @@ instruction instructions[0x100] = {
   [0x4B] = {IN_LD, AM_R_R, RT_C, RT_E},
   [0x4C] = {IN_LD, AM_R_R, RT_C, RT_H},
   [0x4D] = {IN_LD, AM_R_R, RT_C, RT_L},
-  [0x4E] = {IN_LD, AM_R_R, RT_C, RT_HL},
+  [0x4E] = {IN_LD, AM_R_MR, RT_C, RT_HL},
   [0x4F] = {IN_LD, AM_R_R, RT_C, RT_A},
 
   [0x50] = {IN_LD, AM_R_R, RT_D, RT_B},
@@ -93,7 +93,7 @@ instruction instructions[0x100] = {
   [0x53] = {IN_LD, AM_R_R, RT_D, RT_E},
   [0x54] = {IN_LD, AM_R_R, RT_D, RT_H},
   [0x55] = {IN_LD, AM_R_R, RT_D, RT_L},
-  [0x56] = {IN_LD, AM_R_R, RT_D, RT_HL},
+  [0x56] = {IN_LD, AM_R_MR, RT_D, RT_HL},
   [0x57] = {IN_LD, AM_R_R, RT_D, RT_A},
   [0x58] = {IN_LD, AM_R_R, RT_E, RT_B},
   [0x59] = {IN_LD, AM_R_R, RT_E, RT_C},
@@ -101,7 +101,7 @@ instruction instructions[0x100] = {
   [0x5B] = {IN_LD, AM_R_R, RT_E, RT_E},
   [0x5C] = {IN_LD, AM_R_R, RT_E, RT_H},
   [0x5D] = {IN_LD, AM_R_R, RT_E, RT_L},
-  [0x5E] = {IN_LD, AM_R_R, RT_E, RT_HL},
+  [0x5E] = {IN_LD, AM_R_MR, RT_E, RT_HL},
   [0x5F] = {IN_LD, AM_R_R, RT_E, RT_A},
 
   [0x60] = {IN_LD, AM_R_R, RT_H, RT_B},
@@ -110,7 +110,7 @@ instruction instructions[0x100] = {
   [0x63] = {IN_LD, AM_R_R, RT_H, RT_E},
   [0x64] = {IN_LD, AM_R_R, RT_H, RT_H},
   [0x65] = {IN_LD, AM_R_R, RT_H, RT_L},
-  [0x66] = {IN_LD, AM_R_R, RT_H, RT_HL},
+  [0x66] = {IN_LD, AM_R_MR, RT_H, RT_HL},
   [0x67] = {IN_LD, AM_R_R, RT_H, RT_A},
   [0x68] = {IN_LD, AM_R_R, RT_L, RT_B},
   [0x69] = {IN_LD, AM_R_R, RT_L, RT_C},
@@ -118,7 +118,7 @@ instruction instructions[0x100] = {
   [0x6B] = {IN_LD, AM_R_R, RT_L, RT_E},
   [0x6C] = {IN_LD, AM_R_R, RT_L, RT_H},
   [0x6D] = {IN_LD, AM_R_R, RT_L, RT_L},
-  [0x6E] = {IN_LD, AM_R_R, RT_L, RT_HL},
+  [0x6E] = {IN_LD, AM_R_MR, RT_L, RT_HL},
   [0x6F] = {IN_LD, AM_R_R, RT_L, RT_A},
   
   [0x70] = {IN_LD, AM_MR_R, RT_HL, RT_B},
@@ -135,7 +135,7 @@ instruction instructions[0x100] = {
   [0x7B] = {IN_LD, AM_R_R, RT_A, RT_E},
   [0x7C] = {IN_LD, AM_R_R, RT_A, RT_H},
   [0x7D] = {IN_LD, AM_R_R, RT_A, RT_L},
-  [0x7E] = {IN_LD, AM_R_R, RT_A, RT_HL},
+  [0x7E] = {IN_LD, AM_R_MR, RT_A, RT_HL},
   [0x7F] = {IN_LD, AM_R_R, RT_A, RT_A},
 
   [0x80] = {IN_ADD, AM_R_R, RT_A, RT_B},
@@ -180,7 +180,7 @@ instruction instructions[0x100] = {
   [0xA4] = {IN_AND, AM_R_R, RT_A, RT_H},
   [0xA5] = {IN_AND, AM_R_R, RT_A, RT_L},
   [0xA6] = {IN_AND, AM_R_MR, RT_A, RT_HL},
-  [0xA7] = {IN_AND, AM_R, RT_A},
+  [0xA7] = {IN_AND, AM_R_R, RT_A, RT_A},
   [0xA8] = {IN_XOR, AM_R_R, RT_A, RT_B},
   [0xA9] = {IN_XOR, AM_R_R, RT_A, RT_C},
   [0xAA] = {IN_XOR, AM_R_R, RT_A, RT_D},
@@ -188,7 +188,7 @@ instruction instructions[0x100] = {
   [0xAC] = {IN_XOR, AM_R_R, RT_A, RT_H},
   [0xAD] = {IN_XOR, AM_R_R, RT_A, RT_L},
   [0xAE] = {IN_XOR, AM_R_MR, RT_A, RT_HL},
-  [0xAF] = {IN_XOR, AM_R, RT_A},
+  [0xAF] = {IN_XOR, AM_R_R, RT_A, RT_A},
 
   [0xB0] = {IN_OR, AM_R_R, RT_A, RT_B},
   [0xB1] = {IN_OR, AM_R_R, RT_A, RT_C},
@@ -197,7 +197,7 @@ instruction instructions[0x100] = {
   [0xB4] = {IN_OR, AM_R_R, RT_A, RT_H},
   [0xB5] = {IN_OR, AM_R_R, RT_A, RT_L},
   [0xB6] = {IN_OR, AM_R_MR, RT_A, RT_HL},
-  [0xB7] = {IN_OR, AM_R, RT_A},
+  [0xB7] = {IN_OR, AM_R_R, RT_A, RT_A},
   [0xB8] = {IN_CP, AM_R_R, RT_A, RT_B},
   [0xB9] = {IN_CP, AM_R_R, RT_A, RT_C},
   [0xBA] = {IN_CP, AM_R_R, RT_A, RT_D},
@@ -205,10 +205,10 @@ instruction instructions[0x100] = {
   [0xBC] = {IN_CP, AM_R_R, RT_A, RT_H},
   [0xBD] = {IN_CP, AM_R_R, RT_A, RT_L},
   [0xBE] = {IN_CP, AM_R_MR, RT_A, RT_HL},
-  [0xBF] = {IN_CP, AM_R, RT_A},
+  [0xBF] = {IN_CP, AM_R_R, RT_A, RT_A},
 
   [0xC0] = {IN_RET, AM_IMP, RT_NONE, RT_NONE, CT_NZ},
-  [0xC1] = {IN_POP, AM_IMP, RT_BC},
+  [0xC1] = {IN_POP, AM_R, RT_BC},
   [0xC2] = {IN_JP, AM_D16, RT_NONE, RT_NONE, CT_NZ},
   [0xC3] = {IN_JP, AM_D16},
   [0xC4] = {IN_CALL, AM_D16, RT_NONE, RT_NONE, CT_NZ},
@@ -225,7 +225,7 @@ instruction instructions[0x100] = {
   [0xCF] = {IN_RST, AM_IMP, RT_NONE, RT_NONE, CT_NONE, 0x08},
 
   [0xD0] = {IN_RET, AM_IMP, RT_NONE, RT_NONE, CT_NC},
-  [0xD1] = {IN_POP, AM_IMP, RT_DE},
+  [0xD1] = {IN_POP, AM_R, RT_DE},
   [0xD2] = {IN_JP, AM_D16, RT_NONE, RT_NONE, CT_NC},
   // [0xD3] NOT DEFINED
   [0xD4] = {IN_CALL, AM_D16, RT_NONE, RT_NONE, CT_NC},
@@ -242,7 +242,7 @@ instruction instructions[0x100] = {
   [0xDF] = {IN_RST, AM_IMP, RT_NONE, RT_NONE, CT_NONE, 0x18},
 
   [0xE0] = {IN_LDH, AM_A8_R, RT_NONE, RT_A},
-  [0xE1] = {IN_POP, AM_IMP, RT_HL},
+  [0xE1] = {IN_POP, AM_R, RT_HL},
   [0xE2] = {IN_LD, AM_MR_R, RT_C, RT_A},
   // [0xE3] NOT DEFINED
   // [0xE4] NOT DEFINED
@@ -259,14 +259,14 @@ instruction instructions[0x100] = {
   [0xEF] = {IN_RST, AM_IMP, RT_NONE, RT_NONE, CT_NONE, 0x28},
 
   [0xF0] = {IN_LDH, AM_R_A8, RT_A},
-  [0xF1] = {IN_POP, AM_IMP, RT_AF},
+  [0xF1] = {IN_POP, AM_R, RT_AF},
   [0xF2] = {IN_LD, AM_R_MR, RT_A, RT_C},
   [0xF3] = {IN_DI},
   // [0xF4] NOT DEFINED
   [0xF5] = {IN_PUSH, AM_R, RT_AF},
   [0xF6] = {IN_OR, AM_R_D8, RT_A},
   [0xF7] = {IN_RST, AM_IMP, RT_NONE, RT_NONE, CT_NONE, 0x30},
-  [0xF8] = {IN_LD, AM_R_R, RT_HL, RT_SP},
+  [0xF8] = {IN_LD, AM_HL_SPR, RT_HL, RT_SP},
   [0xF9] = {IN_LD, AM_R_R, RT_SP, RT_HL},
   [0xFA] = {IN_LD, AM_R_A16, RT_A},
   [0xFB] = {IN_EI},
@@ -330,8 +330,129 @@ char* inst_lookup[] = {
   "HALT",
   "DAA",
   "STOP",
+  "CB"
 };
 
 const char* inst_name(in_type t) {
   return inst_lookup[t];
+}
+
+static char* rt_lookup[] = {
+  "<NONE>",
+  "A",
+  "F",
+  "B",
+  "C",
+  "D",
+  "E",
+  "H",
+  "L",
+  "AF",
+  "BC",
+  "DE",
+  "HL",
+  "SP",
+  "PC"
+};
+
+void inst_to_str(cpu_context *ctx, char *str) {
+    instruction *inst = ctx->cur_inst;
+    sprintf(str, "%s ", inst_name(inst->type));
+
+    switch(inst->mode) {
+        case AM_IMP:
+            return;
+
+        case AM_R_D16:
+        case AM_R_A16:
+            sprintf(str, "%s %s,$%04X", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], ctx->fetched_data);
+            return;
+
+        case AM_R:
+            sprintf(str, "%s %s", inst_name(inst->type), 
+                rt_lookup[inst->reg_1]);
+            return;
+
+        case AM_R_R: 
+            sprintf(str, "%s %s,%s", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], rt_lookup[inst->reg_2]);
+            return;
+
+        case AM_MR_R:
+            sprintf(str, "%s (%s),%s", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], rt_lookup[inst->reg_2]);
+            return;
+
+        case AM_MR:
+            sprintf(str, "%s (%s)", inst_name(inst->type), 
+                rt_lookup[inst->reg_1]);
+            return;
+
+        case AM_R_MR:
+            sprintf(str, "%s %s,(%s)", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], rt_lookup[inst->reg_2]);
+            return;
+
+        case AM_R_D8:
+        case AM_R_A8:
+            sprintf(str, "%s %s,$%02X", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], ctx->fetched_data & 0xFF);
+            return;
+
+        case AM_R_HLI:
+            sprintf(str, "%s %s,(%s+)", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], rt_lookup[inst->reg_2]);
+            return;
+
+        case AM_R_HLD:
+            sprintf(str, "%s %s,(%s-)", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], rt_lookup[inst->reg_2]);
+            return;
+
+        case AM_HLI_R:
+            sprintf(str, "%s (%s+),%s", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], rt_lookup[inst->reg_2]);
+            return;
+
+        case AM_HLD_R:
+            sprintf(str, "%s (%s-),%s", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], rt_lookup[inst->reg_2]);
+            return;
+
+        case AM_A8_R:
+            sprintf(str, "%s $%02X,%s", inst_name(inst->type), 
+                bus_read(ctx->regs.pc - 1), rt_lookup[inst->reg_2]);
+
+            return;
+
+        case AM_HL_SPR:
+            sprintf(str, "%s (%s),SP+%d", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], ctx->fetched_data & 0xFF);
+            return;
+
+        case AM_D8:
+            sprintf(str, "%s $%02X", inst_name(inst->type), 
+                ctx->fetched_data & 0xFF);
+            return;
+
+        case AM_D16:
+            sprintf(str, "%s $%04X", inst_name(inst->type), 
+                ctx->fetched_data);
+            return;
+
+        case AM_MR_D8:
+            sprintf(str, "%s (%s),$%02X", inst_name(inst->type), 
+                rt_lookup[inst->reg_1], ctx->fetched_data & 0xFF);
+            return;
+
+        case AM_A16_R:
+            sprintf(str, "%s ($%04X),%s", inst_name(inst->type), 
+                ctx->fetched_data, rt_lookup[inst->reg_2]);
+            return;
+
+        default:
+            fprintf(stderr, "INVALID AM: %d\n", inst->mode);
+            NO_IMPL
+    }
 }

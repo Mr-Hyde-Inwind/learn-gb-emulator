@@ -79,7 +79,7 @@ typedef enum {
   AM_MR_D8,
   AM_MR,
   AM_A16_R,
-  AM_R_A16
+  AM_R_A16,
 } addr_mode;
 
 typedef enum {

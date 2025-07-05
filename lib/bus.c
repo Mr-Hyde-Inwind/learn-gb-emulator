@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <ram.h>
 #include <cpu.h>
+#include <io.h>
 
 // 0000 - 3FFF 16 KiB ROM bank 00               From cartridge, usually a fixed bank
 // 4000 - 7FFF 16 KiB ROM Bank 01–NN            From cartridge, switchable bank via mapper (if any)
@@ -38,6 +39,7 @@ uint8_t bus_read(uint16_t address) {
     } else if (address < 0xFF00) {                          // Not switchable, use of this area is prohibited
         return 0;
     } else if (address < 0xFF80) {                          // I/O Registers
+        return io_read(address);
         printf("UNSUPPORTED bus_read(%04x)\n", address);
         NO_IMPL
     } else if (address < 0xFFFF) {                          // High RAM HRAM
@@ -54,8 +56,8 @@ void bus_write(uint16_t address, uint8_t value) {
         cart_write(address, value);
         return;
     } else if (address < 0xA000) {                          // Switchable bank 0/1
-        printf("UNSUPPORTED bus_write(%04X, %02X)\n", address, value);
-        NO_IMPL
+        printf("UNSUPPORTED bus_write(%04X)\n", address);
+        // NO_IMPL
     } else if (address < 0xC000) {                          // 8 KiB External RAM, Cartridge RAM
         cart_write(address, value);
     } else if (address < 0xD000) {                          // 4 KiB Work RAM WRAM
@@ -65,13 +67,12 @@ void bus_write(uint16_t address, uint8_t value) {
     } else if (address < 0xFE00) {                          // Echo RAM, mirror of C000-DDFF, use of this area is prohibited
 
     } else if (address < 0xFEA0) {                          // Object attribute memory OAM
-        printf("UNSUPPORTED bus_write(%04X, %02X)\n", address, value);
-        NO_IMPL
+        // printf("UNSUPPORTED bus_write(%04X, %02X)\n", address, value);
+        // NO_IMPL
     } else if (address < 0xFF00) {                          // Not switchable, use of this area is prohibited
 
     } else if (address < 0xFF80) {                          // I/O Registers
-        printf("UNSUPPORTED bus_write(%04X, %02X)\n", address, value);
-        NO_IMPL
+        io_write(address, value);
     } else if (address == 0xFFFF) {                         // Interrupt Enable register IE
         cpu_set_ie_register(value);
     } else {
