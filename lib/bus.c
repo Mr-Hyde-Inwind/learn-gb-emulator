@@ -5,6 +5,7 @@
 #include <cpu.h>
 #include <io.h>
 #include <ppu.h>
+#include <dma.h>
 
 // 0000 - 3FFF 16 KiB ROM bank 00               From cartridge, usually a fixed bank
 // 4000 - 7FFF 16 KiB ROM Bank 01–NN            From cartridge, switchable bank via mapper (if any)
@@ -47,6 +48,10 @@ uint8_t bus_read(uint16_t address) {
     }
     else if (address < 0xFEA0)                              // Object attribute memory OAM
     {
+        if (IsTransferring()) {
+            return 0xFF;
+        }
+
         return ppu_oam_read(address);
     }
     else if (address < 0xFF00)                              // Not switchable, use of this area is prohibited
@@ -101,6 +106,10 @@ void bus_write(uint16_t address, uint8_t value) {
     }
     else if (address < 0xFEA0)                              // Object attribute memory OAM
     {
+        if (IsTransferring()) {
+            return ;
+        }
+
         ppu_oam_write(address, value);
         return ;
     }
