@@ -72,6 +72,6 @@ uint8_t cart_read(uint16_t address) {
 }
 
 uint8_t cart_write(uint16_t address, uint8_t value) {
-    printf("cart_write\n");
-    NO_IMPL
+    printf("cart_write(%04X)\n", address);
+    // NO_IMPL
 }
