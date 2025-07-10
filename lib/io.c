@@ -2,6 +2,7 @@
 #include <cpu.h>
 #include <timer.h>
 #include <dma.h>
+#include <lcd.h>
 
 
 static char serial_data[2];
@@ -23,8 +24,8 @@ uint8_t io_read(uint16_t address) {
     return cpu_get_int_flags();
   }
 
-  if (address == 0xFF44) {
-    return 0x94;
+  if (address >= 0xFF40 && address <= 0xFF4B) {
+    return LcdRead(address);
   }
 
   printf("UNSUPPORTED bus_read(%04X)\n", address);
@@ -34,7 +35,7 @@ uint8_t io_read(uint16_t address) {
 void io_write(uint16_t address, uint8_t value) {
   if (address == 0xFF01) {
     serial_data[0] = value;
-    return;
+    return ;
   }
 
   if (address == 0xFF02) {
@@ -52,9 +53,9 @@ void io_write(uint16_t address, uint8_t value) {
     return ;
   }
 
-  if (address == 0xFF46) {
-    DmaStart(value);
-    printf("DMA START!\n");
+  if (address >= 0xFF40 && address <= 0xFF4B) {
+    LcdWrite(address, value);
+    return ;
   }
 
   printf("UNSUPPORTED bus_write(%04X)\n", address);

@@ -8,6 +8,7 @@
 #include <ui.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <ppu.h>
 
 /*
   Cart
@@ -28,16 +29,14 @@ void emu_cycles(int cpu_cycles) {
   for (int i = 0; i < real_cycles; i++) {
     ctx.ticks++;
     timer_tick();
+    ppu_tick();
   }
-}
-
-void delay(uint32_t ms) {
-  SDL_Delay(ms);
 }
 
 void* cpu_run(void *p) {
   timer_init();
   cpu_init();
+  ppu_init();
 
   ctx.running = true;
   ctx.paused = false;
@@ -76,11 +75,17 @@ int emu_run(int argc, char **argv) {
     fprintf(stderr, "FAILED TO START MAIN CPU THREAD.\n");
   }
 
+  uint32_t prev_frame = 0;
+
   while (!ctx.die) {
     usleep(1000);
     ui_handle_events();
 
-    UiUpdate();
+    if (prev_frame != PpuGetContext()->current_frame) {
+      UiUpdate();
+    }
+
+    prev_frame = PpuGetContext()->current_frame;
   }
 
   return 0;

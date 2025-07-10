@@ -10,11 +10,11 @@ cpu_context ctx = {0};
 void cpu_init() {
   ctx.regs.pc = 0x100;
   ctx.regs.sp = 0xFFFE;
-  /** 
+  /**
    *  On little-endian mahcines, assignment statements store data in memory starting from
    *  the least significant byte to the most significant byte, following the increasing
    *  address order
-   * 
+   *
    *  typedef struct {
    *    uint8_t a;
    *    uint8_t f;
@@ -27,10 +27,10 @@ void cpu_init() {
    *    uint16_t sp;
    *    uint16_t pc;
    *  } cpu_registers;
-   * 
+   *
    *  When the statement '*((short *)&ctx.regs.a) = 0xB001;' is executed, the value 0x01
    *  is written to the register a, and 0xB0 is written to the adjacent register f.
-   *  
+   *
   **/
 
   *((short *)&ctx.regs.a) = 0xB001;
@@ -110,8 +110,7 @@ bool cpu_step() {
     // printf("Executing Instruction: %02X    PC: %04X\n", ctx.cur_opcode, pc);
     dbg_update();
     dbg_print();
-    
-    
+
     execute();
   } else {
     // halted
