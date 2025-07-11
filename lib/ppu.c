@@ -3,8 +3,6 @@
 #include <ppu_sm.h>
 #include <string.h>
 
-void PipelineFifoReset();
-void PipelineProcess();
 
 static ppu_context ctx;
 
@@ -24,6 +22,9 @@ void ppu_init() {
   ctx.pixel_fifo_ctx.pixel_fifo.head = NULL;
   ctx.pixel_fifo_ctx.pixel_fifo.tail = NULL;
   ctx.pixel_fifo_ctx.current_fetch_state = FS_TILE;
+
+  ctx.line_sprites = 0;
+  ctx.line_sprite_count = 0;
 
   LcdInit();
   LCDS_SET_MODE(MODE_OAM);

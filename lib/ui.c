@@ -97,8 +97,8 @@ void DisplayTile(SDL_Surface* surface, uint16_t addr, uint16_t tile_num, int x, 
     uint8_t b2 = bus_read(addr + (tile_num * 16) + tile_y + 1);
 
     for (int bit = 7; bit >= 0; bit--) {
-      uint8_t hi = !!(b1 & (1 << bit)) << 1;
-      uint8_t lo = !!(b2 & (1 << bit));
+      uint8_t hi = !!(b1 & (1 << bit));
+      uint8_t lo = !!(b2 & (1 << bit)) << 1;
 
       uint8_t color = hi | lo;
 

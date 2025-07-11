@@ -11,8 +11,8 @@
 // CGB palette [CGB Mode Only]: Which of OBP0–7 to use
 
 typedef struct {
-  uint8_t x;
   uint8_t y;
+  uint8_t x;
   uint8_t tile;
 
   unsigned f_cgb_pn     : 3;
@@ -23,16 +23,21 @@ typedef struct {
   unsigned f_priority   : 1;
 } oam_entry;
 
+typedef struct _OamLineEntry {
+  oam_entry entry;
+  struct _OamLineEntry* next;
+} OamLineEntry;
+
 typedef enum {
   FS_TILE,
-  FS_DATA_HI,
   FS_DATA_LO,
+  FS_DATA_HI,
   FS_IDLE,
   FS_PUSH
 } FetchState;
 
-typedef struct FifoEntry {
-  struct FifoEntry* next;
+typedef struct _FifoEntry {
+  struct _FifoEntry* next;
   uint32_t color;
 } FifoEntry;
 
@@ -50,8 +55,8 @@ typedef struct {
   uint8_t fetch_x;
   uint8_t bgw_fetch_data[3];
   uint8_t fetch_entry_data[6];
-  uint8_t map_x;
   uint8_t map_y;
+  uint8_t map_x;
   uint8_t tile_y;
   uint8_t fifo_x;
 } PixelFifoContext;
@@ -59,6 +64,13 @@ typedef struct {
 typedef struct {
   oam_entry oam_ram[40];
   uint8_t vram[0x2000];
+
+  uint8_t line_sprite_count;
+  OamLineEntry* line_sprites;
+  OamLineEntry line_entry_array[10]; // memory to use for line_sprites linked list;
+
+  uint8_t fetched_entry_count;
+  oam_entry fetched_entries[3];
 
   PixelFifoContext pixel_fifo_ctx;
 

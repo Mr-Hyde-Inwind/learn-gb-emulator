@@ -3,6 +3,7 @@
 #include <lcd.h>
 #include <cpu.h>
 #include <interrupts.h>
+#include <string.h>
 
 void IncrementLy() {
   LcdGetContext()->ly++;
@@ -19,6 +20,60 @@ void IncrementLy() {
   }
 }
 
+void LoadLineSprites() {
+  int cur_y = LcdGetContext()->ly;
+  uint8_t sprite_height = LCDC_OBJ_HEIGHT;
+  memset(PpuGetContext()->line_entry_array, 0,
+      sizeof(PpuGetContext()->line_entry_array));
+
+  for (int i = 0; i < 40; i++) {
+    oam_entry e = PpuGetContext()->oam_ram[i];
+
+    if (!e.x) {
+      // x == 0 means not visible...
+      continue;
+    }
+
+    if (PpuGetContext()->line_sprite_count >= 10) {
+      // Up to 10 sprites can be rendered per line.
+      break;
+    }
+
+    if (e.y <= cur_y + 16 && e.y + sprite_height > cur_y + 16) {
+      OamLineEntry* entry = &PpuGetContext()->line_entry_array[
+        PpuGetContext()->line_sprite_count++
+      ];
+
+      entry->entry = e;
+      entry->next = NULL;
+
+      if (!PpuGetContext()->line_sprites ||
+            PpuGetContext()->line_sprites->entry.x > e.x) {
+        entry->next = PpuGetContext()->line_sprites;
+        PpuGetContext()->line_sprites = entry;
+        continue;
+      }
+
+      OamLineEntry* le = PpuGetContext()->line_sprites;
+      OamLineEntry* prev = le;
+      while (le) {
+        if (le->entry.x > e.x) {
+          prev->next = entry;
+          entry->next = le;
+          break;
+        }
+
+        if (!le->next) {
+          le->next = entry;
+          break;
+        }
+        prev = le;
+        le = le->next;
+      }
+    }
+  }
+}
+
 void ppu_mode_oam() {
   if (PpuGetContext()->line_ticks >= 80) {
     LCDS_SET_MODE(MODE_DRAW_PIXEL);
@@ -26,13 +81,21 @@ void ppu_mode_oam() {
     PpuGetContext()->pixel_fifo_ctx.line_x = 0;
     PpuGetContext()->pixel_fifo_ctx.pushed_x = 0;
     PpuGetContext()->pixel_fifo_ctx.fetch_x = 0;
-    PpuGetContext()->pixel_fifo_ctx.fetch_x = 0;
+    PpuGetContext()->pixel_fifo_ctx.fifo_x = 0;
     PpuGetContext()->pixel_fifo_ctx.current_fetch_state = FS_TILE;
+  }
+
+  if (PpuGetContext()->line_ticks == 1) {
+    PpuGetContext()->line_sprites = 0;
+    PpuGetContext()->line_sprite_count = 0;
+
+    LoadLineSprites();
   }
 }
 
 void ppu_mode_xfer() {
   PipelineProcess();
+
   if (PpuGetContext()->pixel_fifo_ctx.pushed_x >= XRES) {
     PipelineFifoReset();
 
