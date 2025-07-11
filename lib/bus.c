@@ -31,8 +31,7 @@ uint8_t bus_read(uint16_t address) {
     }
     else if (address < 0xC000)                              // 8 KiB External RAM, Cartridge RAM
     {
-        printf("UNSUPPORTED bus_read(%04x)\n", address);
-        NO_IMPL
+        return cart_read(address);
     }
     else if (address < 0xD000)                              // 4 KiB Work RAM WRAM
     {

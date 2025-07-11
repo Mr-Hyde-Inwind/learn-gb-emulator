@@ -4,6 +4,7 @@
 #include <emu.h>
 #include <cart.h>
 #include <cpu.h>
+#include <dma.h>
 #include <timer.h>
 #include <ui.h>
 #include <SDL2/SDL.h>
@@ -25,11 +26,14 @@ emu_context* emu_get_context() {
 }
 
 void emu_cycles(int cpu_cycles) {
-  int real_cycles = cpu_cycles * 4;
-  for (int i = 0; i < real_cycles; i++) {
-    ctx.ticks++;
-    timer_tick();
-    ppu_tick();
+  for (int i = 0; i < cpu_cycles; i++) {
+    for (int n = 0; n < 4; n++) {
+      ctx.ticks++;
+      timer_tick();
+      ppu_tick();
+    }
+
+    DmaTick();
   }
 }
 
