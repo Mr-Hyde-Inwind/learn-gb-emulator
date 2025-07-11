@@ -33,6 +33,7 @@ typedef enum {
   MODE_DRAW_PIXEL
 } lcd_mode;
 
+// LCD State Bit
 // 7    - NONE
 // 6    - LYC int select (Read/Write): If set, selects the LYC == LY condition for the STAT interrupt.
 // 5    - Mode 2 int select (Read/Write): If set, selects the Mode 2 (OAM SCAN) condition for the STAT interrupt.
@@ -45,6 +46,7 @@ typedef enum {
 //                 - 2: Mode 2, OAM SCAN
 //                 - 3: Mode 3, DRAWING PIXEL
 
+// LCD Control Bit
 // 7 - LCD & PPU enable: 0 = Off; 1 = On
 // 6 - Window tile map area: 0 = 9800–9BFF; 1 = 9C00–9FFF
 // 5 - Window enable: 0 = Off; 1 = On
