@@ -3,6 +3,13 @@
 #include <bus.h>
 #include <ppu_sm.h>
 
+bool WindowVisible() {
+  return LCDC_WINDOW_ENABLE
+        && LcdGetContext()->win_x >= 0
+        && LcdGetContext()->win_x <= 166
+        && LcdGetContext()->win_y >= 0
+        && LcdGetContext()->win_y < YRES;
+}
 
 void PixelFifoPush(uint32_t value) {
   FifoEntry *next = malloc(sizeof(FifoEntry));
@@ -155,6 +162,29 @@ void PipelineLoadSpriteData(uint8_t offset) {
   }
 }
 
+void PipelineLoadWindowTile() {
+  if (!WindowVisible()) {
+    return ;
+  }
+
+  uint8_t window_y = LcdGetContext()->win_y;
+
+  if (PpuGetContext()->pixel_fifo_ctx.fetch_x + 7 >= LcdGetContext()->win_x
+        && PpuGetContext()->pixel_fifo_ctx.fetch_x + 7 < LcdGetContext()->win_x + YRES + 14) {
+    if (LcdGetContext()->ly >= window_y && LcdGetContext()->ly < window_y + XRES) {
+      uint8_t w_tile_y = PpuGetContext()->window_line / 8;
+
+      PpuGetContext()->pixel_fifo_ctx.bgw_fetch_data[0] = bus_read(LCDC_WINDOW_TILE_MAP
+         + ((PpuGetContext()->pixel_fifo_ctx.fetch_x + 7 - LcdGetContext()->win_x) / 8)
+      + (w_tile_y * 32));
+
+      if (LCDC_BGW_TILE_DATA == 0x8800) {
+        PpuGetContext()->pixel_fifo_ctx.bgw_fetch_data[0] += 128;
+      }
+    }
+  }
+}
+
 void PipelineFetch() {
   switch (PpuGetContext()->pixel_fifo_ctx.current_fetch_state)
   {
@@ -170,6 +200,8 @@ void PipelineFetch() {
         if (LCDC_BGW_TILE_DATA == 0x8800) {
           PpuGetContext()->pixel_fifo_ctx.bgw_fetch_data[0] += 128;
         }
+
+        PipelineLoadWindowTile();
       }
 
       if (LCDC_OBJ_ENABLE && PpuGetContext()->line_sprites) {

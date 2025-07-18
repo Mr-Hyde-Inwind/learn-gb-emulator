@@ -71,6 +71,7 @@ typedef struct {
 
   uint8_t fetched_entry_count;
   oam_entry fetched_entries[3];
+  uint8_t window_line;
 
   PixelFifoContext pixel_fifo_ctx;
 

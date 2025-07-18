@@ -25,6 +25,7 @@ void ppu_init() {
 
   ctx.line_sprites = 0;
   ctx.line_sprite_count = 0;
+  ctx.window_line = 0;
 
   LcdInit();
   LCDS_SET_MODE(MODE_OAM);

@@ -5,7 +5,14 @@
 #include <interrupts.h>
 #include <string.h>
 
+bool WindowVisible();
+
 void IncrementLy() {
+  if (WindowVisible()
+      && LcdGetContext()->ly >= LcdGetContext()->win_y
+      && LcdGetContext()->ly < LcdGetContext()->win_y + YRES) {
+        PpuGetContext()->window_line++;
+  }
   LcdGetContext()->ly++;
 
   if (LcdGetContext()->ly == LcdGetContext()->ly_compare) {
@@ -160,6 +167,7 @@ void ppu_mode_vblank() {
     if (LcdGetContext()->ly >= LINES_PER_FRAME) {
       LCDS_SET_MODE(MODE_OAM);
       LcdGetContext()->ly = 0;
+      PpuGetContext()->window_line = 0;
     }
 
     PpuGetContext()->line_ticks = 0;

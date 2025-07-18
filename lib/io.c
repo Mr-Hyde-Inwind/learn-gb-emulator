@@ -3,11 +3,16 @@
 #include <timer.h>
 #include <dma.h>
 #include <lcd.h>
+#include <gamepad.h>
 
 
 static char serial_data[2];
 
 uint8_t io_read(uint16_t address) {
+  if (address == 0xFF00) {
+    return GamepadGetOutput();
+  }
+
   if (address == 0xFF01) {
     return serial_data[0];
   }
@@ -33,6 +38,11 @@ uint8_t io_read(uint16_t address) {
 }
 
 void io_write(uint16_t address, uint8_t value) {
+  if (address == 0xFF00) {
+    GamepadSetSelect(value);
+    return ;
+  }
+
   if (address == 0xFF01) {
     serial_data[0] = value;
     return ;

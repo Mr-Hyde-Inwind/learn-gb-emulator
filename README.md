@@ -1,5 +1,5 @@
 <div align="center">
-  
+
 ## Learn GB Emulator
 
 </div>
