@@ -22,3 +22,4 @@ Many thanks to the original author for the insightful materials and guidance:
 
 [Gameboy Emulator Development](https://www.youtube.com/watch?v=e87qKixKFME&list=PLVxiWMqQvhg_yk4qy2cSC3457wZJga_e5)
 
+<img width="1553" height="715" alt="image" src="https://github.com/user-attachments/assets/fad4eb55-7cc2-4efa-8cf0-f457ace4a18e" />
